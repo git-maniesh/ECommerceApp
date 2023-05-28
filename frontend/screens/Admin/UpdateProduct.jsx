@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import {
   colors,
@@ -11,43 +11,56 @@ import {
 import Loader from "../../components/Loader";
 import { Button, TextInput } from "react-native-paper";
 import SelectComponents from "../../components/SelectComponents";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
+import { getProductDetails } from "../../redux/actions/productAction";
+import { updateProduct } from "../../redux/actions/otherAction";
 
 const UpdateProduct = ({ navigation, route }) => {
-  const loading = false;
-  const loading_other = false;
-  console.log(route.params);
+  const [visible, setVisible] = useState(false);
 
-  const images = [
-    {
-      url:"https://i.pinimg.com/originals",
-      _id:"narenderImageSmanage"
-    },
-    {
-      url:"https://i.pinimg.com/originals",
-      _id:"narenderImageSmanagdde"
-    },
-    {
-      url:"https://i.pinimg.com/originals",
-      _id:"narenderImageSmanageee"
-    },
-  ]
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+
+  // console.log(route.params);
+
+  const { product, loading } = useSelector((state) => state.product);
+
   const [id] = useState(route.params.id);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [category, setCategory] = useState("Laptop");
+  const [category, setCategory] = useState("");
   const [categoryID, setCategoryID] = useState("");
-  const [categories, setCategories] = useState([
-    { _id: "narenderr", category: "Laptop" },
-    { _id: "narender12r", category: "LaptopHP" },
-    { _id: "narender1211r", category: "LaptopDELL" },
-    { _id: "narender12110r", category: "LaptopACER" },
-  ]);
-  const [visible, setVisible] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useSetCategories(setCategories, isFocused);
+
   const submitHandler = () => {
-    console.log(name, description, price, stock, categoryID);
+    // console.log(name, description, price, stock, categoryID);
+    dispatch(updateProduct(id, name, description, price, stock, categoryID));
   };
+  const loading_other = useMessageAndErrorOther(
+    dispatch,
+    navigation,
+    "adminpanel"
+  );
+  useEffect(() => {
+    dispatch(getProductDetails(id));
+  }, [dispatch, id, isFocused]);
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setDescription(product.description);
+      setPrice(String(product.price));
+      setStock(String(product.stock));
+      setCategory(product.category?.category);
+      setCategoryID(product.category?._id);
+    }
+  }, [product]);
   return (
     <>
       <View
@@ -81,7 +94,10 @@ const UpdateProduct = ({ navigation, route }) => {
             >
               <Button
                 onPress={() =>
-                  navigation.navigate("productimages", { id, images })
+                  navigation.navigate("productimages", {
+                    id,
+                    images: product.images,
+                  })
                 }
                 textColor={colors.color1}
                 // color={colors.color1}

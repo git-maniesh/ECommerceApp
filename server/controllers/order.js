@@ -68,7 +68,7 @@ export const getMyOrders = asyncError(async (req, res, next) => {
 });
 export const getOrderDetails = asyncError(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
-  if (!order) return next(new ErrorHandler("Order Not FOUND", 404));
+  if (!order) return next(new ErrorHandler("Order Not Found", 404));
 
   res.status(200).json({
     success: true,
@@ -84,7 +84,7 @@ export const processOrder = asyncError(async (req, res, next) => {
     order.orderStatus = "Delivered";
     order.deliveredAt = new Date(Date.now());
   } else {
-    return next(new ErrorHandler("order already delivered ", 404));
+    return next(new ErrorHandler("Order Already Delivered ", 404));
   }
   await order.save();
   res.status(200).json({

@@ -4,7 +4,7 @@ import {
   forgetpassword,
   getMyProfile,
   login,
-  logout,
+  logOut,
   resetpassword,
   signup,
   updatePic,
@@ -18,7 +18,7 @@ const router = express.Router();
 router.post("/login", login);
 router.post("/new", singleUpload, signup);
 router.get("/me", isAuthenticated, getMyProfile);
-router.get("/logout", isAuthenticated, logout);
+router.get("/logout", isAuthenticated, logOut);
 
 //Updating routes
 router.put("/updateprofile", isAuthenticated, updateProfile);

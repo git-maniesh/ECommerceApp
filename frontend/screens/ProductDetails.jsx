@@ -1,66 +1,96 @@
-import { View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { colors, defaultStyle } from "../styles/style";
 import Header from "../components/Header";
 import Carousel from "react-native-snap-carousel";
-import { StyleSheet } from "react-native";
 import { Avatar, Button } from "react-native-paper";
-import Toast from "react-native-toast-message";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { getProductDetails } from "../redux/actions/productAction";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 
 const ITEM_WIDTH = SLIDER_WIDTH;
 export const iconOptions = {
-  size: 30,
+  size: 25,
   style: {
     borderRadius: 10,
     backgroundColor: colors.color5,
-    height: 35,
-    width: 35,
+    height: 30,
+    width: 30,
   },
 };
 
 const ProductDetails = ({ route: { params } }) => {
-  console.log(params.id);
-  const name = "Macbook Pro";
-  const description =
-    "Macs are capable of all the same general functions as PCs, such as word processing, playing music and videos, games, accessing the internet, and more. Most features require different programs than those on a PC, however. Apple Macs have a number of advantages over PCs.";
+  const {
+    product: { name, price, stock, description, images },
+  } = useSelector((state) => state.product);
 
-  const price = 9999;
-  const stock = 4;
+  // const name = "Macbook Pro";
+  // const description =
+  //   "Macs are capable of all the same general functions as PCs, such as word processing, playing music and videos, games, accessing the internet, and more. Most features require different programs than those on a PC, however. Apple Macs have a number of advantages over PCs.";
+
+  // const price = 9999;
+  // const stock = 4;
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   //to increment and decrement the quantities
   const incrementQty = () => {
-    if (stock <= quantity) return;
+    if (stock <= quantity)
+      return Toast.show({
+        type: "error",
+        text1: "Maximum value Added",
+      });
+
     setQuantity((prev) => prev + 1);
   };
   const decrementQty = () => {
     if (quantity <= 1) return;
     setQuantity((prev) => prev - 1);
   };
+
   const addToCardHandler = () => {
     if (stock === 0)
       return Toast.show({
         type: "error",
-        text2: "thisis text2",
-        text1: "Out of stock",
+        text1: "Out of Stock",
       });
+    dispatch({
+      type: "addToCart",
+      payload: {
+        product: params.id,
+        name,
+        price,
+        image: images[0]?.url,
+        stock,
+        quantity,
+      },
+    });
     Toast.show({
       type: "success",
-      text1: "added to cart",
+      text1: "Added To Cart",
     });
   };
   const isCarousel = useRef(null);
-  const images = [
-    {
-      id: "narenderrrr",
-      url: "https://i.pinimg.com/originals",
-    },
-    {
-      id: "narenrederrrr",
-      url: "https://i.pinimg.com/originals",
-    },
-  ];
+  // const dispatch = useDispatch();
+  // const images = [
+  //   {
+  //     id: "narenderrrr",
+  //     url: "https://i.pinimg.com/originals",
+  //   },
+
+  useEffect(() => {
+    dispatch(getProductDetails(params.id));
+  }, [dispatch, params.id, isFocused]);
 
   return (
     <View

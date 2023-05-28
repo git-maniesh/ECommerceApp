@@ -17,14 +17,14 @@ export const login = asyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler("Incorrect Email or Password", 400));
   }
-  if (!password) return next(new ErrorHandler("Please enter  Password", 400));
+  if (!password) return next(new ErrorHandler("Incorrect Email or Password", 400));
   //Handle Error
   const isMatched = await user.comparePassword(password);
 
   if (!isMatched) {
     return next(new ErrorHandler("Incorrect Email or Password", 400));
   }
-  sendToken(user, res, `lOGINED Successfully, Welcome ${user.name}  `, 200);
+  sendToken(user, res, `Logined Successfully, Welcome ${user.name}  `, 200);
 });
 
 export const signup = asyncError(async (req, res, next) => {
@@ -65,16 +65,16 @@ export const signup = asyncError(async (req, res, next) => {
   sendToken(user, res, `Registered Successfully `, 201);
 });
 
-export const logout = asyncError(async (req, res, next) => {
+export const logOut = asyncError(async (req, res, next) => {
   res
     .status(200)
-    .cookie("token", "", {
+    .cookie("token","", {
       ...cookieOptions,
       expires: new Date(Date.now()),
     })
     .json({
       success: true,
-      message: "logged out successfully ",
+      message: "Logged out successfully ",
     });
 });
 
@@ -166,7 +166,7 @@ export const forgetpassword = asyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: `email sent to ${user.email} successfully `,
+    message: `Email sent to ${user.email} successfully `,
   });
 });
 export const resetpassword = asyncError(async (req, res, next) => {

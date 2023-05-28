@@ -5,7 +5,7 @@ import MyModal from "../components/MyModal";
 import { useNavigation } from "@react-navigation/native";
 const ProductListItem = ({
   
-  
+  navigate,
   deleteHandler,
   id,
   i,
@@ -16,7 +16,7 @@ const ProductListItem = ({
   imgSrc,
 
 }) => {
-  const navigate = useNavigation();
+  // const navigate = useNavigation();
   const [openModal, setOpenModal] = useState(false);
 
   return (

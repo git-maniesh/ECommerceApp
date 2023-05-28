@@ -3,11 +3,18 @@ import { TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
 import { colors } from "../styles/style";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 const Header = ({back,emptyCart=false}) => {
   const navigate = useNavigation();
+  const dispatch = useDispatch();
   const emptyCartHandler = () =>{
-    console.log("EMpty cart");
+    // console.log("EMpty cart");
+    dispatch({
+      type:"clearCart",
+      
+    })
+
   }
   const route = useRoute()
   return (

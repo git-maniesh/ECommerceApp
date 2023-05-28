@@ -5,13 +5,13 @@ import { Avatar } from "react-native-paper";
 import { iconOptions } from "../screens/ProductDetails";
 
 const CartItem = ({
-  name,
-  amount,
-  qty,
-  index,
-  imgSrc,
   id,
+  name,
   stock,
+  amount,
+  imgSrc,
+  index,
+  qty,
   decrementHandler,
   incrementHandler,
   navigate,
@@ -50,7 +50,7 @@ const CartItem = ({
           style={{
             fontSize: 17,
           }}
-          onPress={() => navigate.navigate("productdetails",{id})}
+          onPress={() => navigate.navigate("productdetails", { id })}
         >
           {name}
         </Text>
@@ -60,17 +60,19 @@ const CartItem = ({
             fontSize: 17,
             fontWeight: "900",
           }}
-          onPress={()=>navigate.navigate("productdetails",{id})}
+          onPress={() => navigate.navigate("productdetails", { id })}
         >
           ₹ {amount}
         </Text>
       </View>
       <View style={styles.qtyContainer}>
-        <TouchableOpacity onPress={() => decrementHandler(id, qty)}>
+        <TouchableOpacity onPress={()=>decrementHandler(id, name, amount, imgSrc, stock, qty)}>
           <Avatar.Icon icon={"minus"} {...iconOptions} />
         </TouchableOpacity>
         <Text style={styles.qtyText}>{qty}</Text>
-        <TouchableOpacity onPress={() => incrementHandler(id, qty, stock)}>
+        <TouchableOpacity
+          onPress={()=>incrementHandler(id, name, amount, imgSrc, stock, qty)}
+        >
           <Avatar.Icon icon={"plus"} {...iconOptions} />
         </TouchableOpacity>
       </View>
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: "100%",
     resizeMode: "contain",
-    top: "-30%",
+    top: "-20%",
     // left: "-5%",
     right: "-10%",
   },

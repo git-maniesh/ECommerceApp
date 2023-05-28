@@ -5,63 +5,29 @@ import Header from "../components/Header";
 import Loader from "../components/Loader";
 import { Headline } from "react-native-paper";
 import OrderItems from "../components/OrderItems";
+import { useGetOrders } from "../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
 
-export const orders = [
-  {
-    _id: "mamsni",
-    shippingInfo: {
-      address: "Madhuban Colony",
-      city: "Hyderabad",
-      country: "India",
-      pincode: 500077,
-    },
-    createdAt: "08-04-2023T2346",
-    orderStatus: "Processing",
-    paymentMethod: "COD",
-    totalAmount: "20000",
-  },
-  {
-    _id: "mamsnif55",
-    shippingInfo: {
-      address: "Madhuban Colony",
-      city: "Hyderabad",
-      country: "India",
-      pincode: 500077,
-    },
-    createdAt: "08-04-2023T2346",
-    orderStatus: "Processing",
-    paymentMethod: "COD",
-    totalAmount: "20000",
-  },
-  {
-    _id: "mamsni2256",
-    shippingInfo: {
-      address: "Madhuban Colony",
-      city: "Hyderabad",
-      country: "India",
-      pincode: 500077,
-    },
-    createdAt: "08-04-2023T2346",
-    orderStatus: "Processing",
-    paymentMethod: "COD",
-    totalAmount: "20000",
-  },
-  {
-    _id: "mamsni22",
-    shippingInfo: {
-      address: "Madhuban Colony",
-      city: "Hyderabad",
-      country: "India",
-      pincode: 500077,
-    },
-    createdAt: "08-04-2023T2346",
-    orderStatus: "Processing",
-    paymentMethod: "oNLINE",
-    totalAmount: "200001",
-  },
-];
+// export const orders = [
+//   {
+//     _id: "mamsni",
+//     shippingInfo: {
+//       address: "Madhuban Colony",
+//       city: "Hyderabad",
+//       country: "India",
+//       pincode: 500077,
+//     },
+//     createdAt: "08-04-2023T2346",
+//     orderStatus: "Processing",
+//     paymentMethod: "COD",
+//     totalAmount: "20000",
+//   },
+
+// ];
+
 const Orders = () => {
-  const loading = false;
+  const isFocused = useIsFocused();
+  const { loading, orders } = useGetOrders(isFocused);
 
   return (
     <View
@@ -82,18 +48,17 @@ const Orders = () => {
           <ScrollView showsVerticalScrollIndicator={false}>
             {orders.length > 0 ? (
               orders.map((item, index) => (
-                <OrderItems 
-                key={item._id} 
-                id={item._id}
-                i={index} 
-                price={item.totalAmount}
-                status={item.orderStatus}
-                paymentMethod={item.paymentMethod}
-                orderedOn={item.createdAt.split("T")[0]}
-                address={`${item.shippingInfo.address},${item.shippingInfo.city},${item.shippingInfo.country} ${item.shippingInfo.pincode}`}
-                // admin={true}
-                // loading={ true}
-                
+                <OrderItems
+                  key={item._id}
+                  id={item._id}
+                  i={index}
+                  price={item.totalAmount}
+                  status={item.orderStatus}
+                  paymentMethod={item.paymentMethod}
+                  orderedOn={item.createdAt.split("T")[0]}
+                  address={`${item.shippingInfo.address},${item.shippingInfo.city},${item.shippingInfo.country} ${item.shippingInfo.pincode}`}
+                  // admin={true}
+                  // loading={ true}
                 />
               ))
             ) : (

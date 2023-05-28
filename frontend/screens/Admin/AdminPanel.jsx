@@ -4,16 +4,23 @@ import { colors, defaultStyle, formHeading } from "../../styles/style";
 import Header from "../../components/Header";
 import Loader from "../../components/Loader";
 import ButtonBox from "../../components/ButtonBox";
-import { products } from "../Home";
+
 import ProductListItem from "../../components/ProductListItem";
 import ProductListHeading from "../../components/ProductListHeading";
 import Chart from "../../components/Chart";
-import { useNavigation } from "@react-navigation/native";
-// import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { useAdminProducts, useMessageAndErrorOther } from "../../utils/hooks";
+import { useDispatch } from "react-redux";
+import { deleteProduct } from "../../redux/actions/otherAction";
+import { getAdminProducts } from "../../redux/actions/productAction";
 
-const navigate = useNavigation;
-const AdminPanel = ({navigation}) => {
-  const loading = false;
+const AdminPanel = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const { loading, products, inStock, outOfStock } = useAdminProducts(
+    dispatch,
+    isFocused
+  );
   const navigationHandler = (text) => {
     switch (text) {
       case "Category":
@@ -32,8 +39,15 @@ const AdminPanel = ({navigation}) => {
   };
 
   const deleteProductHandler = (id) => {
-    console.log(`deleting the product with id : ${id}`);
+    // console.log(`deleting the product with id : ${id}`);
+    dispatch(deleteProduct(id));
   };
+  const loadingDelete = useMessageAndErrorOther(
+    dispatch,
+    null,
+    null,
+    getAdminProducts
+  );
   return (
     <View style={{ ...defaultStyle }}>
       {/* heading */}
@@ -53,7 +67,7 @@ const AdminPanel = ({navigation}) => {
               alignItems: "center",
             }}
           >
-            <Chart inStock={14} outOfStock={4} />
+            <Chart inStock={inStock} outOfStock={outOfStock} />
           </View>
 
           <View>
@@ -85,20 +99,23 @@ const AdminPanel = ({navigation}) => {
           <ProductListHeading />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View>
-              {products.map((item, index) => (
-                <ProductListItem
-                  navigate={navigation}
-                  deleteHandler={deleteProductHandler}
-                  key={item._id}
-                  id={item._id}
-                  i={index}
-                  price={item.price}
-                  stock={item.stock}
-                  name={item.name}
-                  category={item.category}
-                  imgSrc={item.images[0].url}
-                />
-              ))}
+              {/* console.log("inside adminpanel") */}
+              {!loadingDelete &&
+                products.map((item, index) => (
+                  <ProductListItem
+                    navigate={navigation}
+                    deleteHandler={deleteProductHandler}
+                    key={item._id}
+                    id={item._id}
+                    i={index}
+                    price={item.price}
+                    stock={item.stock}
+                    name={item.name}
+                    category={item.category?.category}
+                    // imgSrc={item.images[0].url}
+                    imgSrc={item.images[0].url}
+                  />
+                ))}
             </View>
           </ScrollView>
         </>

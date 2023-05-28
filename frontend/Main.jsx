@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./screens/Home";
 import ProductDetails from "./screens/ProductDetails";
-import Toast  from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 import Cart from "./screens/Cart";
 import ConfirmOrder from "./screens/ConfirmOrder";
 import Payment from "./screens/Payment";
@@ -22,9 +22,17 @@ import UpdateProduct from "./screens/Admin/UpdateProduct";
 import NewProduct from "./screens/Admin/NewProduct";
 import ProductImages from "./screens/Admin/ProductImages";
 import Camera from "./screens/Camera";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUser } from "./redux/actions/userActions";
 
 const Stack = createNativeStackNavigator();
 const Main = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -55,7 +63,6 @@ const Main = () => {
           <Stack.Screen name="updateproduct" component={UpdateProduct} />
           <Stack.Screen name="newproduct" component={NewProduct} />
           <Stack.Screen name="productimages" component={ProductImages} />
-
         </Stack.Group>
       </Stack.Navigator>
       <Toast position="top" />

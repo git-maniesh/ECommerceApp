@@ -15,28 +15,36 @@ import {
 } from "../../styles/style";
 import Header from "../../components/Header";
 import { Avatar, Button } from "react-native-paper";
+import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { addCategory, deleteCategory } from "../../redux/actions/otherAction";
 
-const Categories = () => {
-  const loading  =false;
+const Categories = ({ navigation }) => {
+  // const loading = false;
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  useSetCategories(setCategories, isFocused);
+  const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
+
   const deleteHandler = (id) => {
-    console.log(`Deleting the category with id ${id} `);
+    // console.log(`Deleting rthe category with id ${id} `);
+    dispatch(deleteCategory(id));
   };
-  const submitHandler = () => {};
-  const categories = [
-    {
-      name: "Laptops",
-      _id: "Laptopss",
-    },
-    {
-      name: "Laptops",
-      _id: "LaptopssDell",
-    },
-    {
-      name: "Laptops",
-      _id: "LaptopssHP",
-    },
-  ];
+
+  const submitHandler = () => {
+    dispatch(addCategory(category));
+  };
+  // const categories = [
+  //   {
+  //     name: "Laptops",
+  //     _id: "Laptopss",
+  //   },
+
+  // ];
   return (
     <View style={defaultStyle}>
       <Header back={true} />
@@ -58,7 +66,7 @@ const Categories = () => {
         >
           {categories.map((i) => (
             <CategoryCard
-              name={i.name}
+              name={i.category}
               id={i._id}
               key={i._id}
               deleteHandler={deleteHandler}
@@ -82,7 +90,7 @@ const Categories = () => {
           }}
           disabled={!category}
           onPress={submitHandler}
-          loading = {loading}
+          loading={loading}
         >
           Add
         </Button>
@@ -129,7 +137,3 @@ const styles = StyleSheet.create({
     backgroundColor: colors.color3,
   },
 });
-
-
-
-

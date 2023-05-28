@@ -42,7 +42,7 @@ const SearchModel = ({
       <SafeAreaView>
         <Searchbar
           placeholder="Search..."
-          onChangeText={(query) => setSearchQuery(e)}
+          onChangeText={(query) => setSearchQuery(query)}
           value={searchQuery}
           style={{
             marginTop: 20,

@@ -20,11 +20,11 @@ const ProductCard = ({
     >
       <View
         style={{
-          elevation: 5,
+          elevation: 15,
           width: 250,
           alignItems: "center",
           justifyContent: "space-between",
-          margin: 50,
+          margin: 20,
           borderRadius: 20,
           height: 400,
           backgroundColor: i % 2 === 0 ? colors.color1 : colors.color2,
@@ -36,11 +36,11 @@ const ProductCard = ({
           }}
           style={{
             width: "100%",
-            height: 250,
+            height: 220,
             resizeMode: "contain",
             position: "absolute",
             left: 50,
-            top: 95,
+            top: 105,
           }}
         />
         <View
@@ -54,9 +54,10 @@ const ProductCard = ({
           <Text
             numberOfLines={2}
             style={{
-              textColor: i % 2 === 0 ? colors.color1 : colors.color2,
+              color: i % 2 === 0 ? colors.color2 : colors.color2,
               fontSize: 25,
               fontWeight: "300",
+              width: "60%",
             }}
           >
             {name}
@@ -76,19 +77,19 @@ const ProductCard = ({
         <TouchableOpacity
           style={{
             backgroundColor: i % 2 === 0 ? colors.color2 : colors.color3,
-            borderRadius: 10,
+            paddingVertical: 5,
+            borderRadius: 5,
             borderBottomRightRadius: 20,
             borderBottomLeftRadius: 20,
             width: "100%",
           }}
         >
-          
           <Button
             title="Add to Cart"
-            onPress={() => addToCardHandler(id, stock)}
+            onPress={() => addToCardHandler(id, name, price, image, stock)}
             textColor={i % 2 === 0 ? colors.color1 : colors.color2}
           >
-             Add to cart
+            Add to cart
           </Button>
         </TouchableOpacity>
       </View>

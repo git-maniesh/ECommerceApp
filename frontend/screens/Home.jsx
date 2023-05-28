@@ -1,123 +1,69 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, defaultStyle } from "../styles/style";
 import Header from "../components/Header";
 import { Avatar, Button } from "react-native-paper";
 import SearchModel from "../components/SearchModel";
 import ProductCard from "../components/ProductCard";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
 import Heading from "../components/Heading";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../redux/actions/productAction";
+import { useSetCategories } from "../utils/hooks";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
-const categories = [
-  { category: "Nice", _id: "niceee" },
-  { category: "Man", _id: "Mannn" },
-  { category: "womann", _id: "niwomann" },
-  { category: "woman1n", _id: "niw2omann" },
-  { category: "woma1n1n", _id: "niw22omann" },
-  { category: "woman2n", _id: "niw1omann" },
-  { category: "Narender", _id: "helo" },
-];
-export const products = [
-  {
-    price: 9999,
-    name: "Sample",
-    stock: 25,
-    _id: "narender",
-    category: "IDK",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample",
-    stock: 25,
-    _id: "narender0007",
-    category: "IDK",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample11",
-    stock: 25,
-    _id: "narenderaf",
-    category: "FURNITURES",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample11",
-    stock: 25,
-    _id: "narendera22f",
-    category: "furnituress1",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample11",
-    stock: 25,
-    _id: "narenderasfs4f",
-    category: "furnituress221",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample11",
-    stock: 25,
-    _id: "nareseesnderaf",
-    category: "furnituress1",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-  {
-    price: 9999,
-    name: "Sample11",
-    stock: 25,
-    _id: "n5154arenderaf",
-    category: "furnituress1",
-    images: [
-      {
-        url: "https://i.pinimg.com/originals",
-      },
-    ],
-  },
-];
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSearch, setActiveSearch] = useState(false);
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+
+  const navigate = useNavigation();
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  const { products } = useSelector((state) => state.product);
+
   const categoryButtonHandler = (id) => {
-    // console.log(id);
     setCategory(id);
   };
 
-  const addToCardHandler = (id) => {
-    console.log("ADdig tocart ", id);
+  const addToCardHandler = (id, name, price, image, stock) => {
+    if (stock === 0)
+      return Toast.show({
+        type: "error",
+        text1: "Out of Stock",
+      });
+    dispatch({
+      type: "addToCart",
+      payload: {
+        product: id,
+        name,
+        price,
+        image,
+        stock,
+        quantity:1,
+      },
+    });
+    Toast.show({
+      type: "success",
+      text1: "Added To Cart",
+    });
   };
+  useSetCategories(setCategories, isFocused);
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      dispatch(getAllProducts(searchQuery, category));
+    }, 500);
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [dispatch, searchQuery, category, isFocused]);
+  // useEffect(() => {
+  // dispatch(getAllProducts(searchQuery, category));
+  // }, [dispatch, searchQuery, category]);
 
-  const navigate = useNavigation();
   return (
     <>
       {activeSearch && (
@@ -187,7 +133,7 @@ const Home = () => {
                 <Text
                   style={{
                     fontSize: 12,
-                    color: category === item._id ? "white" : "gray",
+                    color: category === item._id ? colors.color2 : "gray",
                   }}
                 >
                   {item.category}

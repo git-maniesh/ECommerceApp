@@ -9,7 +9,7 @@ const CameraComponent = ({ navigation, route }) => {
   const [hasPermission, setHasPermission] = useState(true);
   const [type, setType] = useState(CameraType.back);
   const [camera, setCamera] = useState(null);
-  console.log(route.params);
+  // console.log(route.params);
 
   const openImagePicker = async () => {
     const permissionResult =
@@ -43,7 +43,7 @@ const CameraComponent = ({ navigation, route }) => {
 
   const clickPicture = async () => {
     const data = await camera.takePictureAsync();
-    console.log(data);
+    // console.log(data);
     if (route.params?.newProduct)
       return navigation.navigate("newproduct", {
         image: data.uri,

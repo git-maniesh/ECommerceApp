@@ -3,13 +3,29 @@ import React from "react";
 import { colors, defaultStyle, formHeading } from "../../styles/style";
 import Header from "../../components/Header";
 import Loader from "../../components/Loader";
-import { orders } from "../Orders";
 import OrderItems from "../../components/OrderItems";
+import { useGetOrders, useMessageAndErrorOther } from "../../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
+import { Headline } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { processOrder } from "../../redux/actions/otherAction";
 
-const AdminOrders = () => {
-  const loading = false;
-  const updateHandler = () => {};
-  const processOrderLoading = false;
+const AdminOrders = ({ navigation }) => {
+  // const loading = false;
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const { loading, orders } = useGetOrders(useIsFocused, true);
+
+  const updateHandler = (id) => {
+    // console.log("processing");
+    // console.log(id);
+    dispatch(processOrder(id));
+  };
+  const processOrderLoading = useMessageAndErrorOther(
+    dispatch,
+    navigation,
+    "adminpanel"
+  );
   return (
     <View
       style={{
@@ -41,8 +57,7 @@ const AdminOrders = () => {
                   address={`${item.shippingInfo.address},${item.shippingInfo.city},${item.shippingInfo.country} ${item.shippingInfo.pincode}`}
                   admin={true}
                   updateHandler={updateHandler}
-
-                  loading={ processOrderLoading}
+                  loading={processOrderLoading}
                 />
               ))
             ) : (

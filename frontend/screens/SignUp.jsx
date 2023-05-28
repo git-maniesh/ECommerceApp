@@ -10,10 +10,14 @@ import {
 } from "../styles/style";
 import { Avatar, Button, TextInput } from "react-native-paper";
 import Footer from "../components/Footer";
+import mime from "mime";
+import { useDispatch } from "react-redux";
+import { register } from "../redux/actions/userActions";
+import { useMessageAndErrorUser } from "../utils/hooks";
 
-const SignUp = ({ navigation,route }) => {
-    const disableBtn = !name || !email || !password || !address || !city || !country || !pinCode;
-  const loading = false;
+const SignUp = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,11 +26,28 @@ const SignUp = ({ navigation,route }) => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [pinCode, setPinCode] = useState("");
+  const disableBtn =
+    !name || !email || !password || !address || !city || !country || !pinCode;
   const submitHandler = () => {
-    alert("Yeah");
-    // we will remove this in future
-    navigation.navigate("verify");
+    const myForm = new FormData();
+    myForm.append("name", name);
+    myForm.append("email", email);
+    myForm.append("password", password);
+    myForm.append("address", address);
+    myForm.append("country", country);
+    myForm.append("city", city);
+    myForm.append("pinCode", pinCode);
+
+    if (avatar !== "") {
+      myForm.append("file", {
+        uri: avatar,
+        type: mime.getType(avatar),
+        name: avatar.split("/").pop(),
+      });
+    }
+    dispatch(register(myForm));
   };
+  const loading = useMessageAndErrorUser(navigation, dispatch, "profile");
   useEffect(() => {
     if (route.params?.image) setAvatar(route.params.image);
   }, [route.params]);
@@ -47,7 +68,7 @@ const SignUp = ({ navigation,route }) => {
             backgroundColor: colors.color3,
           }}
         >
-          <View style={{ minHeight:900 }}>
+          <View style={{ minHeight: 900 }}>
             <Avatar.Image
               style={{
                 alignSelf: "center",

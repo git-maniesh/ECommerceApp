@@ -1,4 +1,4 @@
-import { View, Text,  TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   colors,
@@ -9,16 +9,21 @@ import {
 } from "../styles/style";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../components/Footer";
+import { useMessageAndErrorOther } from "../utils/hooks";
+import { useDispatch } from "react-redux";
+import { resetPassword } from "../redux/actions/otherAction";
 
 const Verify = ({ navigation }) => {
-  const loading = false;
+  const dispatch = useDispatch();
+  const loading = useMessageAndErrorOther(dispatch, navigation, "login");
 
   const [otp, setOtp] = useState("");
-    const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const submitHandler = () => {
-    alert("Yeah");
-    // we will remove this in future
-    navigation.navigate("login");
+    // alert("Yeah");
+    // // we will remove this in future
+    // navigation.navigate("login");
+    dispatch(resetPassword(otp, password));
   };
   return (
     <>
@@ -32,6 +37,7 @@ const Verify = ({ navigation }) => {
             {...inputOptions}
             placeholder="OTP"
             keyboardType="number-pad"
+            secureTextEntry={true}
             value={otp}
             onChangeText={setOtp}
           />
@@ -46,18 +52,18 @@ const Verify = ({ navigation }) => {
           <Button
             loading={loading}
             textColor={colors.color2}
-            disabled={otp === "" || password===""}
+            disabled={otp === "" || password === ""}
             style={formStyles.btn}
             onPress={submitHandler}
           >
-            Reset 
+            Reset
           </Button>
           <Text style={formStyles.or}>OR</Text>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate("forgetpassword")}
           >
-            <Text style={formStyles.link}>Resend OTP  </Text>
+            <Text style={formStyles.link}>Resend OTP </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -66,5 +72,4 @@ const Verify = ({ navigation }) => {
   );
 };
 
-
-export default Verify
+export default Verify;

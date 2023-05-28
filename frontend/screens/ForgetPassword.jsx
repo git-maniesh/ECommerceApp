@@ -1,4 +1,4 @@
-import { View, Text,  TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   colors,
@@ -9,16 +9,22 @@ import {
 } from "../styles/style";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../components/Footer";
+import { useDispatch } from "react-redux";
+import { forgetPassword } from "../redux/actions/otherAction";
+import {useMessageAndErrorOther} from "../utils/hooks"
 
 const ForgetPassword = ({ navigation }) => {
-  const loading = false;
+  const dispatch = useDispatch();
+  // const loading = false;
+  const loading = useMessageAndErrorOther(dispatch,navigation,"verify")
 
   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
   const submitHandler = () => {
-    alert("Yeah");
-    // we will remove this in future
-    navigation.navigate("verify");
+    // alert("Yeah");
+    // // we will remove this in future
+    // navigation.navigate("verify");
+    dispatch(forgetPassword(email));
   };
   return (
     <>

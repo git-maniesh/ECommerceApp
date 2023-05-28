@@ -4,23 +4,47 @@ import { colors, defaultStyle, formHeading } from "../../styles/style";
 import Header from "../../components/Header";
 import ImageCard from "../../components/ImageCard";
 import { Avatar, Button } from "react-native-paper";
+import { useMessageAndErrorOther } from "../../utils/hooks";
+import { useDispatch } from "react-redux";
+import mime from "mime";
+import {
+  deleteProductImage,
+  updateProductImage,
+} from "../../redux/actions/otherAction";
 
 const ProductImages = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+
+  const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
+
   const [images] = useState(route.params.images);
   const [productId] = useState(route.params.id);
+  const [image, setImage] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
-  const loading = false;
-  const submitHandler = () => {};
-  const deleteHandler = (id) => {
-    console.log("Image Id", id);
-    console.log("Product Id", productId);
+
+  const submitHandler = () => {
+    const myForm = new FormData();
+    myForm.append("file", {
+      uri: image,
+      type: mime.getType(image),
+      name: image.split("/").pop(),
+    });
+    dispatch(updateProductImage(productId, myForm));
+    // console.log("working submitHandler");
   };
+
+  const deleteHandler = (imageId) => {
+    dispatch(deleteProductImage(productId, imageId));
+    // console.log("deleting the image");
+  };
+
   useEffect(() => {
-    if (route.params?.image) setImage(route.params.image);
-    setImageChanged(true);
+    if (route.params?.image) {
+      setImage(route.params.image);
+      setImageChanged(true);
+    }
   }, [route.params]);
 
-  const [image, setImage] = useState(null);
   return (
     <View style={{ ...defaultStyle, backgroundColor: colors.color5 }}>
       <Header back={true} />
@@ -41,10 +65,10 @@ const ProductImages = ({ navigation, route }) => {
         >
           {images.map((i) => (
             <ImageCard
-              src={i.url}
-              deleteHandler={deleteHandler}
               key={i._id}
+              src={i.url}
               id={i._id}
+              deleteHandler={deleteHandler}
             />
           ))}
         </View>

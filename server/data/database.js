@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+// require('dotenv').config({ path: './config.env' });
 
 export const connectDB = async () => {
   try {
@@ -7,7 +8,7 @@ export const connectDB = async () => {
     });
     console.log(`Server connected to database ${connection.host}`);
   } catch (error) {
-    console.log(`Some error has occurred `, error);
+    console.log(`Some error has occurred ${error}`);
     process.exit(1);
   }
 };
