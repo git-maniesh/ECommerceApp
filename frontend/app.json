@@ -5,10 +5,10 @@
     "description": "This is the Self made eCommerce store that will have all the items at affordable and with fast delivery options.",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/loading-onscreen.gif",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/shopping-cart-loading.gif",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
