@@ -54,7 +54,7 @@ const ProductCard = ({
           <Text
             numberOfLines={2}
             style={{
-              color: i % 2 === 0 ? colors.color2 : colors.color2,
+              color: i % 2 === 0 ? colors.color2 : colors.color3,
               fontSize: 25,
               fontWeight: "300",
               width: "60%",
